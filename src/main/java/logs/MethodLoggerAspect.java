@@ -24,6 +24,7 @@ public class MethodLoggerAspect {
         StringBuilder logBuilder = new StringBuilder();
         logMethod(joinPoint, logBuilder);
         logArgs(joinPoint, logBuilder, methodLogger);
+        logSuccessMessage(methodLogger, logBuilder);
         createLog(joinPoint, logBuilder);
     }
 
