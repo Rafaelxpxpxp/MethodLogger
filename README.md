@@ -11,7 +11,9 @@ Here is an exemple how to use it:
         repository.save(entity);
     }
 ```
+output exemple: ```m=save a=UserEntity{id=6330eaa6-8da3-45a3-81f4-ce95cc538994, currentLevel=2} Saving entity```
 
+## @ArgumentLogger
 Sometimes you don't wanna log all params, maybe because it's sensitive information. Here's an exemple how to hide params:
 
 ```java
@@ -24,6 +26,7 @@ Sometimes you don't wanna log all params, maybe because it's sensitive informati
     }
 ```
 
-In this case only planInformation will be logged.
+In this case only planInformation will be logged, you have to set logAllArgs to false in this way it only logs with the annotation <b>@ArgumentLogger</b>.
 
+## Logging returns
 By default the method return will be logged, but you can hide it as well by setting ```logReturn=false```.
