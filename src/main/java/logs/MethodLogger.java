@@ -18,7 +18,7 @@ public @interface MethodLogger {
     String msgOnSuccess() default "";
 
     /**
-     * Put a message in the log if it  was a error
+     * Put a message in the log if it throws an error
      */
     String msgOnException() default "";
 

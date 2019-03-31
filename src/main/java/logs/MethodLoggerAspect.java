@@ -8,15 +8,14 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.stream.Stream;
 
-
 @Aspect
-@Configuration
+@Component
 public class MethodLoggerAspect {
 
     @Before(value = "@annotation(methodLogger))")
@@ -31,12 +30,14 @@ public class MethodLoggerAspect {
     @AfterReturning(value = "@annotation(methodLogger))", returning = "returningValue")
     public void methodReturnLogger(JoinPoint joinPoint, MethodLogger methodLogger, Object returningValue) {
         StringBuilder logBuilder = new StringBuilder();
+
+        logSuccessMessage(methodLogger, logBuilder);
+
         if (hasReturn(returningValue)) {
             logMethod(joinPoint, logBuilder);
             logReturn(returningValue, logBuilder, methodLogger);
-            createLog(joinPoint, logBuilder);
         }
-        logSuccessMessage(methodLogger, logBuilder);
+        createLog(joinPoint, logBuilder);
     }
 
     @AfterThrowing(value = "@annotation(methodLogger))", throwing = "exception")
@@ -47,29 +48,29 @@ public class MethodLoggerAspect {
         createErrorLog(joinPoint, logBuilder);
     }
 
-    private boolean hasReturn(Object returningValue) {
+    private static boolean hasReturn(Object returningValue) {
         return returningValue != null;
     }
 
 
 
-    private void logReturn(Object returningValue, StringBuilder logBuilder, MethodLogger methodLogger) {
-            logBuilder.append("r=");
-            logBuilder.append(returningValue);
-            logBuilder.append(" ");
+    private static void logReturn(Object returningValue, StringBuilder logBuilder, MethodLogger methodLogger) {
+        logBuilder.append("r=");
+        logBuilder.append(returningValue);
+        logBuilder.append(" ");
     }
 
-    private void createLog(JoinPoint joinPoint, StringBuilder logBuilder) {
+    private static void createLog(JoinPoint joinPoint, StringBuilder logBuilder) {
         Logger log = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
         log.info(logBuilder.toString());
     }
 
-    private void createErrorLog(JoinPoint joinPoint, StringBuilder logBuilder) {
+    private static void createErrorLog(JoinPoint joinPoint, StringBuilder logBuilder) {
         Logger log = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
         log.error(logBuilder.toString());
     }
 
-    private void logSuccessMessage(MethodLogger methodLogger, StringBuilder logBuilder) {
+    private static void logSuccessMessage(MethodLogger methodLogger, StringBuilder logBuilder) {
         String msgOnSuccess = methodLogger.msgOnSuccess();
         if (!msgOnSuccess.isEmpty()) {
             logBuilder.append(msgOnSuccess);
@@ -77,7 +78,7 @@ public class MethodLoggerAspect {
         }
     }
 
-    private void logErrorMessage(MethodLogger methodLogger, StringBuilder logBuilder, Exception exception) {
+    private static void logErrorMessage(MethodLogger methodLogger, StringBuilder logBuilder, Exception exception) {
         String msgOnException = methodLogger.msgOnException();
         if (!msgOnException.isEmpty()) {
             logBuilder.append(msgOnException);
@@ -133,3 +134,4 @@ public class MethodLoggerAspect {
         logBuilder.append(" ");
     }
 }
+
